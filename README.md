@@ -1,2 +1,2 @@
 # AnSwitch
-GUI Switch for Unity
+GUI Switch in Setting Menu for Unity
