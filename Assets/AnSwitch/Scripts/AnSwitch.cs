@@ -5,26 +5,43 @@ using UnityEngine.UI;
 
 public class AnSwitch : MonoBehaviour
 {
+    //기능
     public bool isOn;                   //스위치 온오프
+
+    //스위치 색상
+    public Color handleColor = Color.white;
+    public Color offBackgroundColor = Color.gray;
+    public Color onBackgroundColor = Color.green;
+
+    //핸들 이동
     [Range(0, 3)]                       //moveDuration의 최소 최댓값을 개발자가 슬라이더로 설정 가능하게 만듦
     public float moveDuration = 3f;     //핸들 이동 애니메이션 속도
-
     const float totalHandleMoveLength = 76f;
     const float halfMoveLength = totalHandleMoveLength / 2;
 
+    //참조
     Image handleImage;                  //핸들 이미지
-    Image backgroundImage;              //스위치 이미지
+    Image backgroundImage;              //배경 이미지
     RectTransform handleRectTransform;  //핸들 위치
 
     //코루틴
-    Coroutine moveHandleCoroutine;
+    Coroutine moveHandleCoroutine;              //핸들 이동 애니메이션 코루틴
+    Coroutine changeBackgroundColorCoroutine;   //배경색 변경 코루틴
 
     void Start()
     {
-        //핸들 위치 초기화
+        //핸들 위치 가져오기
         GameObject handleObject = transform.Find("Handle").gameObject;
-
         handleRectTransform = handleObject.GetComponent<RectTransform>();
+
+        //핸들 이미지 가져오기
+        handleImage = handleObject.GetComponent<Image>();
+        handleImage.color = handleColor;
+
+        //배경 이미지 가져오기
+        backgroundImage = GetComponent<Image>();
+        backgroundImage.color = offBackgroundColor;
+
         if (isOn)
         { handleRectTransform.anchoredPosition = new Vector2(halfMoveLength, 0); }
         else
@@ -42,14 +59,25 @@ public class AnSwitch : MonoBehaviour
         float ratio = Mathf.Abs(distance.x) / totalHandleMoveLength;        //Mathf.Abs() : 괄호 안의 값을 절댓값으로 바꿈
         float duration = moveDuration * ratio;
 
+
+        //핸들 움직이는 코루틴
         if (moveHandleCoroutine != null)
         {
             StopCoroutine(moveHandleCoroutine);
             moveHandleCoroutine = null;
         }
+        moveHandleCoroutine = StartCoroutine(moveHandle(fromPosition, toPosition, duration));
 
-        //함수 1, 2 호출
-        StartCoroutine(moveHandle(fromPosition, toPosition, duration));
+        Color fromColor = backgroundImage.color;
+        Color toColor = (isOn) ? onBackgroundColor : offBackgroundColor;
+
+        //배경 색 변경 코루틴
+        if (changeBackgroundColorCoroutine != null)
+        {
+            StopCoroutine(changeBackgroundColorCoroutine);
+            changeBackgroundColorCoroutine = null;
+        }
+        changeBackgroundColorCoroutine = StartCoroutine(changeBackgroundColor(fromColor, toColor, duration));
     }
 
     /// <summary>
@@ -73,8 +101,28 @@ public class AnSwitch : MonoBehaviour
             currentTime += Time.deltaTime;
             yield return null;
         }
-
     }
 
+    /// <summary>
+    /// 클릭 시 스위치 배경의 색상을 바꿔주는 함수
+    /// </summary>
+    /// <param name="fromColor">배경의 초기 색상</param>
+    /// <param name="toColor">배경이 변경될 색상</param>
+    /// <param name="duration">색상이 변경되는 시간</param>
+    /// <returns>없음</returns>
     //2. 클릭 시 스위치 배경 색상 변경하는 함수
+    IEnumerator changeBackgroundColor(Color fromColor, Color toColor, float duration)
+    {
+        //TODO: 1. 정해진 시간동안 색상 변경시키기
+        float currentTime = 0f;
+        while (currentTime < duration)
+        {
+            float t = currentTime / duration;
+            Color newColor = Color.Lerp(fromColor, toColor, t);
+            backgroundImage.color = newColor;
+
+            currentTime += Time.deltaTime;
+            yield return null;
+        }
+    }
 }
