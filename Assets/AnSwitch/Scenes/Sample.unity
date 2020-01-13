@@ -303,9 +303,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOn: 0
   handleColor: {r: 1, g: 1, b: 1, a: 1}
-  offBackgroundColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-  onBackgroundColor: {r: 0, g: 1, b: 0, a: 1}
-  moveDuration: 3
+  offBackgroundColor: {r: 0.8352941, g: 0.8352941, b: 0.8352941, a: 1}
+  onBackgroundColor: {r: 0.35686275, g: 0.85490197, b: 0.3019608, a: 1}
+  moveDuration: 1.246
 --- !u!1 &534669902
 GameObject:
   m_ObjectHideFlags: 0

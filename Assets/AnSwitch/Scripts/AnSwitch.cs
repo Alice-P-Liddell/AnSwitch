@@ -10,12 +10,12 @@ public class AnSwitch : MonoBehaviour
 
     //스위치 색상
     public Color handleColor = Color.white;
-    public Color offBackgroundColor = Color.gray;
-    public Color onBackgroundColor = Color.green;
+    public Color offBackgroundColor = new Color(213 / 255f, 213 / 255f, 213 / 255f, 1f);
+    public Color onBackgroundColor = new Color(91 / 255f, 218 / 255f, 77 / 255f, 1f);
 
     //핸들 이동
     [Range(0, 3)]                       //moveDuration의 최소 최댓값을 개발자가 슬라이더로 설정 가능하게 만듦
-    public float moveDuration = 3f;     //핸들 이동 애니메이션 속도
+    public float moveDuration = 0.2f;     //핸들 이동 애니메이션 속도
     const float totalHandleMoveLength = 76f;
     const float halfMoveLength = totalHandleMoveLength / 2;
 
@@ -55,7 +55,6 @@ public class AnSwitch : MonoBehaviour
         Vector2 fromPosition = handleRectTransform.anchoredPosition;
         Vector2 toPosition = (isOn) ? new Vector2(halfMoveLength, 0) : new Vector2(-halfMoveLength, 0);     //?
         Vector2 distance = toPosition - fromPosition;
-
         float ratio = Mathf.Abs(distance.x) / totalHandleMoveLength;        //Mathf.Abs() : 괄호 안의 값을 절댓값으로 바꿈
         float duration = moveDuration * ratio;
 
